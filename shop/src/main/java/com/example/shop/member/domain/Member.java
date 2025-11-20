@@ -1,53 +1,51 @@
 package com.example.shop.member;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.OffsetDateTime;
 import java.util.UUID;
-
+@Schema(description = "유저 정보")
 @Data
 @Entity
-@Table(name="\"member\"", schema = "public")
+@Table(name = "\"member\"", schema = "public")
 public class Member {
 
+    @Schema(description = "유저의 UUID")
     @Id
     private UUID id;
-
+    @Schema(description = "유저의 email")
     @Column(nullable = false, length = 50, unique = true)
     private String email;
-
-    @Column(name ="\"name\"", nullable = false, length = 20)
+    @Schema(description = "유저명")
+    @Column(name = "\"name\"", length = 20)
     private String name;
-
-    @Column(name ="\"password\"", nullable = false, length = 100)
+    @Schema(description = "비밀번호")
+    @Column(name = "\"password\"", nullable = false, length = 100)
     private String password;
-
-    @Column(name ="phone", nullable = false, length = 20, unique = true)
+    @Schema(description = "핸드폰번호")
+    @Column(nullable = false, length = 20, unique = true)
     private String phone;
 
-    @Column(name ="reg_id", nullable = false)
+    @Column(name = "reg_id", nullable = false)
     private UUID regId;
 
-    @Column(name ="reg_dt", nullable = false)
+    @Column(name = "reg_dt", nullable = false)
     private LocalDateTime regDt;
 
-    @Column(name ="modify_id", nullable = false)
+    @Column(name = "modify_id", nullable = false)
     private UUID modifyId;
 
-    @Column(name ="modify_dt", nullable = false)
-    private LocalDateTime  modifyDt;
+    @Column(name = "modify_dt", nullable = false)
+    private LocalDateTime modifyDt;
 
-    @Column(name="saltkey", nullable=false, length=14)
+    @Column(name = "saltkey", nullable = false, length = 14)
     private String saltKey;
 
     @Column(name = "flag", length = 5)
     private String flag;
-
-
-
+    public Member(){}
     public Member(UUID id,
                   String email,
                   String name,
@@ -63,7 +61,6 @@ public class Member {
         this.saltKey = saltKey;
         this.flag = flag;
     }
-
     public Member(String id,
                   String email,
                   String name,
@@ -79,8 +76,6 @@ public class Member {
         this.saltKey = saltKey;
         this.flag = flag;
     }
-
-    public Member(){}
 
     @PrePersist
     public void prePersist() {
@@ -108,4 +103,5 @@ public class Member {
             modifyId = id;
         }
     }
+
 }
