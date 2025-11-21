@@ -1,65 +1,64 @@
-package com.example.shop.member;
+package com.example.shop.member.application;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Repository;
+import com.example.shop.common.ResponseEntity;
+import com.example.shop.member.application.dto.MemberCommand;
+import com.example.shop.member.application.dto.MemberInfo;
+import com.example.shop.member.domain.Member;
+import com.example.shop.member.domain.MemberRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 @Service
-@RequiredArgsConstructor
 public class MemberService {
-
-    private final MemberRepository memberRepository;
-
-    public List<MemberResponse> findAll(){
-        return memberRepository.findAll().stream()
-                .map(m->new MemberResponse())
+    @Autowired
+    private MemberRepository memberRepository;
+    public ResponseEntity<List<MemberInfo>> findAll(Pageable pageable){
+        Page<Member> page = memberRepository.findAll(pageable);
+        List<MemberInfo> members = page.stream()
+                .map(MemberInfo::from)
                 .toList();
+        return new ResponseEntity<>(HttpStatus.OK.value(), members, page.getTotalElements());
+    }
+    public ResponseEntity<MemberInfo> create(MemberCommand command) {
+        Member member = Member.create(
+                command.email(),
+                command.name(),
+                command.password(),
+                command.phone(),
+                command.saltKey(),
+                command.flag()
+        );
+        Member saved = memberRepository.save(member);
+        return new ResponseEntity<>(HttpStatus.CREATED.value(), MemberInfo.from(saved), 1);
     }
 
-    public List<MemberResponse> create(MemberRequest request){
+    public ResponseEntity<MemberInfo> update(MemberCommand command, String id) {
+        UUID uuid = UUID.fromString(id);
+        Member member = memberRepository.findById(uuid)
+                .orElseThrow(() -> new IllegalArgumentException("Member not found: " + id));
 
-        Member member = new Member(
-                UUID.randomUUID(),
-                request.email(),
-                request.name(),
-                request.password(),
-                request.phone(),
-                request.saltKey(),
-                request.flag()
+        member.updateInformation(
+                command.email(),
+                command.name(),
+                command.password(),
+                command.phone(),
+                command.saltKey(),
+                command.flag()
         );
 
-        List<Member> createdMember= List.of(memberRepository.save(member));
-        List<MemberResponse> memberResponses = member.stream()
-                .map(m->new MemberResponse())
-                .toList();
-
-        return memberResponses;
+        Member updated = memberRepository.save(member);
+        return new ResponseEntity<>(HttpStatus.OK.value(), MemberInfo.from(updated), 1);
     }
 
-    public Member modify(String id, MemberRequest request){
-       Member member= memberRepository.findById(UUID.fromString(id)).orElse(null);
-       member.setEmail(request.email());
-       member.setName(request.name());
-       member.setPhone(request.phone());
-       member.setSaltKey(request.saltKey());
-       member.setFlag(request.flag());
-       return member;
-    }
-
-    public Member delete(String id){
-
-        Member member = memberRepository.findById(UUID.fromString(id)).orElse(null);
-        memberRepository.deleteById(UUID.fromString(id));
-
-        return member;
-    }
-
-    //현재 계정갯수 집계
-    public Long count(){
-        return memberRepository.count();
+    public ResponseEntity<Void> delete(String id) {
+        UUID uuid = UUID.fromString(id);
+        memberRepository.deleteById(uuid);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT.value(), null, 0);
     }
 }
