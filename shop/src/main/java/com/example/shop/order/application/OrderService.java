@@ -1,12 +1,12 @@
-package com.example.shop.service;
+package com.example.shop.order.application;
 
 import com.example.shop.common.ResponseEntity;
-import com.example.shop.entity.dto.OrderCommand;
-import com.example.shop.entity.dto.OrderInfo;
-import com.example.shop.entity.PurchaseOrder;
-import com.example.shop.repository.PurchaseOrderRepository;
+import com.example.shop.order.domain.PurchaseOrder;
+import com.example.shop.order.application.dto.OrderCommand;
+import com.example.shop.order.application.dto.OrderInfo;
 import com.example.shop.product.domain.Product;
 import com.example.shop.product.domain.ProductRepository;
+import com.example.shop.order.domain.PurchaseOrderRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;

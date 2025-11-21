@@ -33,6 +33,7 @@ payment:
     secret-key: ${TOSS_SECRET_KEY:}
     success-url: ${TOSS_SUCCESS_URL}
     fail-url: ${TOSS_FAIL_URL}
+
 settlement:
   async:
     enabled: ${SETTLEMENT_ASYNC:false}

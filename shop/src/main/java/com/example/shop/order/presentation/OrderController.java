@@ -1,9 +1,9 @@
-package com.example.shop.controller;
+package com.example.shop.order.presentation;
 
 import com.example.shop.common.ResponseEntity;
-import com.example.shop.entity.dto.OrderInfo;
-import com.example.shop.entity.dto.OrderRequest;
-import com.example.shop.service.OrderService;
+import com.example.shop.order.application.dto.OrderInfo;
+import com.example.shop.order.presentation.dto.OrderRequest;
+import com.example.shop.order.application.OrderService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;

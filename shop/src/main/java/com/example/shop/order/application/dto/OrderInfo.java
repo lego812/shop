@@ -1,7 +1,7 @@
-package com.example.shop.entity.dto;
+package com.example.shop.order.application.dto;
 
-import com.example.shop.entity.PurchaseOrder;
-import com.example.shop.entity.PurchaseOrderStatus;
+import com.example.shop.order.domain.PurchaseOrder;
+import com.example.shop.order.domain.PurchaseOrderStatus;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
